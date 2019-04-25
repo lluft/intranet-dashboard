@@ -64,6 +64,13 @@ describe ApiApp do
     ApiApp.authenticate(a.app_token, a.app_secret, nil)
   end
 
+  it "should be authenticated with correct credentials and ip range" do
+    ips = %w[127.0.0.2 127.0.0.3]
+    a = create(:api_app, ip_address: ips)
+    expect(ApiApp.authenticate(a.app_token, a.app_secret, ips.first)).to be_truthy
+    expect(ApiApp.authenticate(a.app_token, a.app_secret, ips.last)).to be_truthy
+  end
+
   it "should be authenticated with correct credentials" do
     a = create(:api_app)
     ApiApp.authenticate(a.app_token, a.app_secret, a.ip_address)

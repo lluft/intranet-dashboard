@@ -16,7 +16,11 @@ class ApiApp < ActiveRecord::Base
       return false unless /^161.52\.\d+\.\d+/.match(ip_address)
       app = where(app_token: app_token).first
     else
-      app = where(app_token: app_token, ip_address: ip_address).first
+      app = where(
+        "app_token = ? AND ip_address LIKE ?",
+        app_token,
+        "%#{ip_address}%"
+      ).first
     end
 
     if app.present? && app.authenticate(app_secret)
